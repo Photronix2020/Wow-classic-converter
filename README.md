@@ -1,7 +1,11 @@
 # WoW Classic Addon Converter
 
-Turn an addon made for **retail World of Warcraft** into one that runs on **WoW Classic**.
+Turn an addon made for **retail World of Warcraft** or **WoW Forever** into one that runs on **WoW Classic**.
 It works for Classic Era, Hardcore, Season of Discovery, Anniversary, TBC Classic and Mists of Pandaria Classic.
+
+**Yes, it works with WoW Forever addons.** Forever addons are written with the same modern code as
+retail addons, and that's exactly what the converter translates for Classic. It recognizes Forever's
+own addon files automatically, so there's nothing extra to do.
 
 **[⬇ Download WoWClassicConverter.exe](https://github.com/Photronix2020/Wow-classic-converter/releases/latest/download/WoWClassicConverter.exe)**
 (Windows, free, nothing to install)
@@ -10,9 +14,10 @@ It works for Classic Era, Hardcore, Season of Discovery, Anniversary, TBC Classi
 
 ## How to use it
 
-### 1. Get the retail addon
+### 1. Get the retail or Forever addon
 
 Download the addon you want from CurseForge, Wago, WoWInterface, GitHub or wherever it lives.
+Both retail and WoW Forever versions work.
 Keep the **.zip file** as it downloaded; you don't need to unzip it.
 
 ### 2. Convert it
@@ -64,6 +69,14 @@ addon works depends on what it does.
 | ✅ Usually works | Uses features Classic also has | Bag and inventory tools, tooltip info, chat tweaks, cooldown and buff trackers, unit frame tweaks, small UI changes |
 | ⚠️ Partly works | Mostly general, with some retail-only features | An addon that also shows Mythic+ scores: the rest works, that part stays empty |
 | ❌ Won't be useful | Built around a system Classic doesn't have | Mythic+ tools, Delves, garrisons, the modern talent tree, transmog collections |
+
+**Forever addons** are often the easiest to convert. Forever is set in the original Azeroth like
+Classic, so its addons tend to rely less on retail-only systems. If an addon offers both a retail and a
+Forever version, the converter uses the Forever one.
+
+WoW Forever launches on November 4, 2026. Forever support was built and tested against addons released
+for the Forever beta. If something in the final release behaves differently, please
+[open an issue](https://github.com/Photronix2020/Wow-classic-converter/issues).
 
 Next to the converted zip is a **report** (`-classic-report.md`, open it with **Open report**). It lists anything
 the converter found that Classic probably doesn't support, so you can tell in advance which features won't work.

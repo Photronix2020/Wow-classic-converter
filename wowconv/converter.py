@@ -301,7 +301,8 @@ def rewrite_xml(src, shim_global, relpath, targets):
 # TOC files
 # --------------------------------------------------------------------------
 
-_FLAVOR_SUFFIX = re.compile(r"[_-](Mainline|Standard|Classic|Vanilla|TBC|BCC|Wrath|WOTLKC|Cata|Mists)$", re.I)
+# "Camelot" is WoW Forever.
+_FLAVOR_SUFFIX = re.compile(r"[_-](Mainline|Standard|Camelot|Classic|Vanilla|TBC|BCC|Wrath|WOTLKC|Cata|Mists)$", re.I)
 
 
 def toc_base_name(path):
@@ -309,10 +310,16 @@ def toc_base_name(path):
 
 
 def pick_source_toc(addon_dir, name=None):
-    """The TOC that retail would load: <Name>_Mainline.toc, else <Name>.toc."""
+    """The modern-API TOC to convert from.
+
+    WoW Forever (<Name>_Camelot.toc) comes first: it uses the retail API but
+    is set in the original Azeroth, so its file list is the closest to what
+    Classic needs. Then retail (<Name>_Mainline.toc), then <Name>.toc.
+    """
     name = name or addon_dir.name
     tocs = {p.name.lower(): p for p in addon_dir.glob("*.toc")}
-    for cand in (f"{name}_mainline.toc", f"{name}-mainline.toc", f"{name}.toc"):
+    for cand in (f"{name}_camelot.toc", f"{name}-camelot.toc",
+                 f"{name}_mainline.toc", f"{name}-mainline.toc", f"{name}.toc"):
         if cand.lower() in tocs:
             return tocs[cand.lower()]
     for p in tocs.values():

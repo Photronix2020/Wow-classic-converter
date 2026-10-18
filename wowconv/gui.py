@@ -44,7 +44,7 @@ class App:
         frm.pack(fill="both", expand=True)
         frm.columnconfigure(0, weight=1)
 
-        ttk.Label(frm, text="Retail addon (a .zip as downloaded, or the addon folder):").grid(
+        ttk.Label(frm, text="Retail or WoW Forever addon (a .zip as downloaded, or the addon folder):").grid(
             row=0, column=0, columnspan=3, sticky="w")
         self.input_var = tk.StringVar()
         ttk.Entry(frm, textvariable=self.input_var).grid(row=1, column=0, sticky="ew", pady=4)

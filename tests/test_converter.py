@@ -185,6 +185,37 @@ class EndToEndTests(unittest.TestCase):
         self.assertIn("WowStyle1DropdownTemplate", report)
         self.assertIn("PLAYER_SPECIALIZATION_CHANGED", report)
 
+    def forever_copy(self, keep_mainline):
+        """The fixture repackaged as a WoW Forever addon (RetailDemo_Camelot.toc)."""
+        src = self.tmp / "src" / "RetailDemo"
+        shutil.copytree(FIXTURE, src)
+        mainline = src / "RetailDemo_Mainline.toc"
+        (src / "RetailDemo_Camelot.toc").write_text(mainline.read_text().replace("120001", "16001"))
+        if keep_mainline:
+            # A retail TOC that loads a different file list; the Forever one should win.
+            mainline.write_text("## Interface: 120001\n## Title: Retail Demo\n\nRetailOnly.lua\n")
+        else:
+            mainline.unlink()
+        return src
+
+    @unittest.skipUnless(LUA, "lua5.1 not installed")
+    def test_forever_only_addon(self):
+        src = self.forever_copy(keep_mainline=False)
+        out = self.tmp / "out"
+        self.assertEqual(main([str(src), "-o", str(out)]), 0)
+        addon = out / "RetailDemo"
+        self.assertTrue((addon / "RetailDemo_Vanilla.toc").exists())
+        r = run_in_fake_classic(addon, "RetailDemo_Vanilla.toc")
+        self.assertEqual(r["spellName"], "Fireball")
+
+    def test_forever_toc_preferred_over_mainline(self):
+        src = self.forever_copy(keep_mainline=True)
+        out = self.tmp / "out"
+        self.assertEqual(main([str(src), "-o", str(out), "-t", "vanilla"]), 0)
+        toc = (out / "RetailDemo" / "RetailDemo_Vanilla.toc").read_text()
+        self.assertIn("Core.lua", toc)
+        self.assertNotIn("RetailOnly.lua", toc)
+
     def test_zip_round_trip(self):
         src_zip = self.tmp / "RetailDemo.zip"
         with zipfile.ZipFile(src_zip, "w") as zf:

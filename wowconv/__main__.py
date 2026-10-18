@@ -11,7 +11,7 @@ from .converter import NoAddonFound, convert_path
 def main(argv=None):
     p = argparse.ArgumentParser(
         prog="wowconv",
-        description="Convert a retail World of Warcraft addon so it loads on WoW Classic where possible.")
+        description="Convert a retail or WoW Forever addon so it loads on WoW Classic where possible.")
     p.add_argument("input", help="addon folder, folder of addons, or .zip as downloaded")
     p.add_argument("-o", "--output", help="output folder, or a path ending in .zip (default: <input>-classic)")
     p.add_argument("-t", "--target", action="append", choices=sorted(apidb.TARGETS),

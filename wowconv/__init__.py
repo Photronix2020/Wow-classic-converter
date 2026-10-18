@@ -1,3 +1,3 @@
-"""Convert retail World of Warcraft addons to run on WoW Classic where possible."""
+"""Convert retail and WoW Forever addons to run on WoW Classic where possible."""
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
