@@ -1,0 +1,57 @@
+name: Build
+
+# Every push: run the tests and build the Windows exe (downloadable from the
+# run's "Artifacts" section).
+# Pushing a tag like v1.0.0: also publish a GitHub Release with the exe attached.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Lua 5.1 (for the end-to-end tests)
+        run: sudo apt-get update && sudo apt-get install -y lua5.1
+      - name: Run tests
+        run: python -m unittest discover -v tests
+
+  windows-exe:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install PyInstaller
+        run: python -m pip install pyinstaller==6.16.0
+      - name: Build exe
+        run: python -m PyInstaller --noconfirm WoWClassicConverter.spec
+      - name: Smoke test the exe
+        shell: pwsh
+        run: |
+          Compress-Archive -Path tests/fixtures/RetailDemo -DestinationPath RetailDemo.zip
+          $p = Start-Process dist/WoWClassicConverter.exe -ArgumentList "RetailDemo.zip","-o","smoke.zip" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "exe exited with $($p.ExitCode)" }
+          if (-not (Test-Path smoke.zip)) { throw "no output zip" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WoWClassicConverter-windows
+          path: dist/WoWClassicConverter.exe
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/WoWClassicConverter.exe --title "${{ github.ref_name }}" --generate-notes

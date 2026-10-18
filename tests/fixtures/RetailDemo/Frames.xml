@@ -1,0 +1,11 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="RetailDemoXMLFrame">
+		<Scripts>
+			<OnLoad>
+				self:RegisterEvent("WEEKLY_REWARDS_UPDATE")
+				self.ok = C_Item.GetItemNameByID(6948)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	<Frame name="RetailDemoDropdown" inherits="WowStyle1DropdownTemplate"/>
+</Ui>

@@ -1,0 +1,10 @@
+## Interface: 120001
+## Title: Retail Demo
+## AllowLoadGameType: mainline
+## SavedVariables: RetailDemoDB
+## IconTexture: Interface\Icons\INV_Misc_QuestionMark
+
+Libs\LibFake\LibFake.lua
+Core.lua
+Options.lua
+Frames.xml

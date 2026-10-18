@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+build/
+dist/
+*-classic/
+*-classic.zip
+*-classic-report.md
