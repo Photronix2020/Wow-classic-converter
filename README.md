@@ -1,27 +1,112 @@
 # WoW Classic Addon Converter
 
-Takes an addon written for current retail World of Warcraft and makes it load
-and run on WoW Classic clients wherever that's possible. Anything it can't fix
-automatically goes into a report with file and line numbers.
+Turn an addon made for **retail World of Warcraft** into one that runs on **WoW Classic**.
+It works for Classic Era, Hardcore, Season of Discovery, Anniversary, TBC Classic and Mists of Pandaria Classic.
 
-## Download (Windows)
+**[⬇ Download WoWClassicConverter.exe](https://github.com/Photronix2020/Wow-classic-converter/releases/latest/download/WoWClassicConverter.exe)**
+(Windows, free, nothing to install)
 
-Get `WoWClassicConverter.exe` from the [Releases](../../releases) page. No install needed.
+![The converter window](docs/screenshot.png)
 
-1. Double-click `WoWClassicConverter.exe`.
-2. Click **Choose zip…** and pick the addon zip as you downloaded it from CurseForge, Wago or similar.
-   You can also use **Choose folder…** to pick an addon folder.
-3. Tick which Classic versions you play and press **Convert**.
-4. Unzip the resulting `<name>-classic.zip` into your Classic AddOns folder, for example
-   `World of Warcraft\_classic_era_\Interface\AddOns\`.
+## How to use it
 
-The first time you run it, Windows may say *"Windows protected your PC"*. That happens because
-the exe isn't code-signed, which costs money. Click **More info** → **Run anyway**.
-The exe is built automatically from this repository's source code by GitHub Actions; see
-`.github/workflows/build.yml`.
+### 1. Get the retail addon
 
-If the game lists the addon as out of date, tick **Load out of date AddOns** in the
-in-game AddOns menu.
+Download the addon you want from CurseForge, Wago, WoWInterface, GitHub or wherever it lives.
+Keep the **.zip file** as it downloaded; you don't need to unzip it.
+
+### 2. Convert it
+
+1. Double-click **WoWClassicConverter.exe**.
+   - The first time, Windows may show *"Windows protected your PC"*. Click **More info**, then **Run anyway**.
+     See [Is it safe?](#is-it-safe) for why this happens.
+2. Click **Choose zip…** and pick the addon zip from step 1.
+   If you have an addon folder instead of a zip, use **Choose folder…**.
+3. Tick the Classic versions you play. Leaving all three ticked is fine.
+4. Click **Convert**.
+
+A new file appears next to the original, named after it with **-classic** on the end.
+For example, `CoolAddon.zip` becomes `CoolAddon-classic.zip`.
+Click **Show result** to open the folder it's in.
+
+### 3. Install it in Classic
+
+1. Open your Classic AddOns folder. If you're not sure where it is, open the Battle.net app, pick the
+   Classic game, click the gear next to **Play**, and choose **Show in Explorer**. Then open `Interface`,
+   then `AddOns`. Create those folders if they don't exist yet.
+
+   | You play | The AddOns folder is in |
+   |---|---|
+   | Classic Era, Hardcore, Season of Discovery | `World of Warcraft\_classic_era_\Interface\AddOns` |
+   | Anniversary realms | `World of Warcraft\_anniversary_\Interface\AddOns` |
+   | Mists of Pandaria Classic | `World of Warcraft\_classic_\Interface\AddOns` |
+
+2. Double-click the **-classic.zip** file to open it. Inside are one or more folders.
+   Drag those folders straight into **AddOns**.
+
+   > ⚠️ Don't use "Extract All" with its default settings. It puts everything inside an extra folder
+   > (`AddOns\CoolAddon-classic\CoolAddon`), and the game won't find it. The finished layout must be
+   > `AddOns\CoolAddon\CoolAddon.toc`.
+
+3. Start the game. On the character screen, click **AddOns** at the bottom left and check the addon is
+   ticked. If it says **Out of date**, tick **Load out of date AddOns** at the top.
+
+That's it. To remove a converted addon, delete its folder from AddOns.
+
+## What to expect
+
+The converter fixes the things that usually stop retail addons loading on Classic: renamed and
+reorganized game functions, and newer game events Classic doesn't know about. How well a converted
+addon works depends on what it does.
+
+| | Kind of addon | Examples |
+|---|---|---|
+| ✅ Usually works | Uses features Classic also has | Bag and inventory tools, tooltip info, chat tweaks, cooldown and buff trackers, unit frame tweaks, small UI changes |
+| ⚠️ Partly works | Mostly general, with some retail-only features | An addon that also shows Mythic+ scores: the rest works, that part stays empty |
+| ❌ Won't be useful | Built around a system Classic doesn't have | Mythic+ tools, Delves, garrisons, the modern talent tree, transmog collections |
+
+Next to the converted zip is a **report** (`-classic-report.md`, open it with **Open report**). It lists anything
+the converter found that Classic probably doesn't support, so you can tell in advance which features won't work.
+
+**Check first whether the addon already has a Classic version.** Many popular addons, such as Details!,
+WeakAuras, Questie and Bagnon, release official Classic versions. Those always beat a converted copy, so use the
+converter for addons that don't.
+
+## Problems?
+
+**The game shows a Lua error from the addon.**
+Some part of the addon uses something Classic doesn't have. Check the report for that file name.
+The addon may still be mostly usable. If it isn't, that addon can't be converted automatically.
+
+**The addon doesn't appear in the AddOns list.**
+It's almost always the extra-folder problem from step 3. Open the AddOns folder and make sure you see
+`CoolAddon\CoolAddon.toc`, not `CoolAddon-classic\CoolAddon\CoolAddon.toc`.
+
+**It says "Out of date".**
+Tick **Load out of date AddOns** in the AddOns menu. This happens when a game patch is newer than the
+converter's version list. It's harmless.
+
+**"No addon found" when converting.**
+The zip or folder you picked doesn't contain an addon (a folder with a `.toc` file inside).
+Make sure you picked the addon itself and not, say, a zip of several unrelated things.
+
+**Can I share addons I've converted?**
+Converting for your own use is fine. Before posting a converted copy of someone else's addon, check its
+license or ask the author.
+
+### Is it safe?
+
+Windows warns about the exe because it isn't code-signed, which costs money every year, not because
+anything is wrong with it. The exe is built automatically by GitHub from the source code in this
+repository (see [the build script](.github/workflows/build.yml)), so you can check exactly what it does.
+It never connects to the internet. It reads the addon you choose and writes a new zip next to it.
+Your original addon isn't changed.
+
+---
+
+# For developers
+
+Everything below is technical detail. You don't need it to use the converter.
 
 ## Command line
 
