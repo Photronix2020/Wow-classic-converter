@@ -119,12 +119,10 @@ The result is `dist/WoWClassicConverter.exe`.
 
 ## Publishing a new version
 
-Bump `__version__` in `wowconv/__init__.py`, commit, then tag and push:
+Change `__version__` in `wowconv/__init__.py` (for example to `1.0.1`), commit, and push
+to `main`. GitHub Actions runs the tests, builds the exe on Windows, and creates release
+`v1.0.1` with the exe attached. Pushes that don't change the version only build a test
+copy, available under the run's "Artifacts".
 
-```sh
-git tag v1.0.1
-git push origin v1.0.1
-```
-
-GitHub Actions runs the tests, builds the exe on Windows, and creates a release with
-the exe attached.
+The permanent link to the newest exe is
+https://github.com/Photronix2020/Wow-classic-converter/releases/latest/download/WoWClassicConverter.exe
